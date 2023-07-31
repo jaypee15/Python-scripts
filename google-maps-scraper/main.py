@@ -2,9 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ActionChains
 import time
 import csv
 import re
+
+
 
 def get_business(city, business):
     driver = webdriver.Chrome()
@@ -15,7 +18,12 @@ def get_business(city, business):
 
     results=[]
 
-    time.sleep(3)  # Give time for the page to load (adjust as needed)
+
+    ActionChains(driver)\
+        .scroll_by_amount(0, 1000)\
+        .perform()
+    
+    time.sleep(3)  
     elements = driver.find_elements(By.CSS_SELECTOR, 'div.Nv2PK')
     for element in elements:
 
@@ -54,7 +62,7 @@ def get_business(city, business):
             print("Error:", e)
 
         try:
-            # Find all the h1 elements on the page
+            # Find business name
             h1_elements = driver.find_elements(By.TAG_NAME, 'h1')
             if len(h1_elements) >= 2:
                 h1_element = h1_elements[1] 
@@ -84,23 +92,9 @@ def get_business(city, business):
 
         results.append({'Business Name': business_name, 'Website': website_href, 'Address': address, 'Phone Number': phone_number})
             
-         
-    try:
-        next_button = driver.find_element(By.XPATH, "//button[@aria-label=' Next page ']")
-        next_button.click()
-    except:
-        pass
-
     driver.close()
     return results
 
-
-def save_to_csv(data, filename):
-    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-        fieldnames = ['Business Name', 'Website', 'Address', 'Phone Number']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(data)
 
 
 def save_to_csv(data, filename):

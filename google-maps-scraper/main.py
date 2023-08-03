@@ -19,9 +19,7 @@ def get_business(city, business):
     results=[]
 
 
-    ActionChains(driver)\
-        .scroll_by_amount(0, 1000)\
-        .perform()
+    ActionChains(driver).scroll_by_amount(0, 1000).perform()
     
     time.sleep(3)  
     elements = driver.find_elements(By.CSS_SELECTOR, 'div.Nv2PK')
